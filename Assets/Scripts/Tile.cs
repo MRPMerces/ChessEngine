@@ -51,6 +51,10 @@ public class Tile : IXmlSerializable {
         return tiles;
     }
 
+    public Vector3 toVector3() {
+        return new Vector3(X, Y, 0);
+    }
+
     #region Saving and loading
 
     /// <summary>

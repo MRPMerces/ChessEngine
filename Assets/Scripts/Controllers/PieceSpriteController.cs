@@ -22,7 +22,7 @@ public class PieceSpriteController : MonoBehaviour {
 
     public void addPiece(Piece piece) {
         GameObject gameObject = new GameObject();
-        gameObject.transform.position = new Vector3(piece.tile.X, piece.tile.Y, 0);
+        gameObject.transform.position = piece.tile.toVector3();
 
         gameObject.transform.SetParent(transform, true);
 
@@ -77,5 +77,14 @@ public class PieceSpriteController : MonoBehaviour {
             default:
                 break;
         }
+    }
+
+    public void movePiece(Piece piece, Tile tile) {
+        pieceGameObjectMap[piece].transform.position = tile.toVector3();
+    }
+
+    public void takes(Piece piece) {
+        Destroy(pieceGameObjectMap[piece]);
+        pieceGameObjectMap.Remove(piece);
     }
 }
