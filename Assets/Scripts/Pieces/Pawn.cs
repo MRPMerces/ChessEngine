@@ -9,62 +9,98 @@ public class Pawn : Piece
         this.pieceType = pieceType;
         this.color = color;
     }
-
-    void checkMove(Tile tile) {
-        if (tile.X != this.tile.X) {
-            if (tile.piece != null) {
-                move(tile);
-            }
-            //Invalid move
-            return;
-        }
-
-        if (tile.Y > this.tile.Y + 2) {
-            //Invalid move
-            return;
-        }
-
-        else if (tile.Y == 4) {
-            move(tile);
-        }
-    }
-
-    public override Tile[] getMovableTiles() {
+    public override Tile[] getMovableTiles(bool OnlyTakes = false) {
         List<Tile> tiles = new List<Tile>();
 
         switch (color) {
             case Color.BLACK:
+                if (!OnlyTakes && World.world.isValidMove(tile.X, tile.Y - 1, color) == State.VALID) {
+                    // South tile
+                    tiles.Add(World.world.getTileAt(tile.X, tile.Y - 1));
+                }
+
+                if (!OnlyTakes && tile.Y == 6 && World.world.isValidMove(tile.X, 4, color) == State.VALID) {
+                    // South +1 tile
+                    tiles.Add(World.world.getTileAt(tile.X, 4));
+                }
+
+                switch (World.world.isValidMove(tile.X + 1, tile.Y - 1, color)) {
+                    // South-east tile
+                    case State.VALID:
+                        tiles.Add(World.world.getTileAt(tile.X + 1, tile.Y - 1));
+                        break;
+                    case State.INVALID:
+                        break;
+                    case State.TAKES:
+                        tiles.Add(World.world.getTileAt(tile.X + 1, tile.Y - 1));
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (World.world.isValidMove(tile.X - 1, tile.Y - 1, color)) {
+                    // South-west tile
+                    case State.VALID:
+                        tiles.Add(World.world.getTileAt(tile.X - 1, tile.Y - 1));
+                        break;
+                    case State.INVALID:
+                        break;
+                    case State.TAKES:
+                        tiles.Add(World.world.getTileAt(tile.X - 1, tile.Y - 1));
+                        break;
+                    default:
+                        break;
+                }
 
                 break;
 
             case Color.WHITE:
-                if (World.world.getTileAt(tile.X, tile.Y + 1) != null && World.world.getTileAt(tile.X, tile.Y + 1).piece == null) {
+                if (!OnlyTakes && World.world.isValidMove(tile.X, tile.Y + 1, color) == State.VALID) {
                     // North tile
                     tiles.Add(World.world.getTileAt(tile.X, tile.Y + 1));
-                    if (tile.Y == 1 && World.world.getTileAt(tile.X, 3) != null && World.world.getTileAt(tile.X, 3).piece == null) {
-                        // North +1 tile
-                        tiles.Add(World.world.getTileAt(tile.X, 3));
-                    }
                 }
 
-                if (World.world.getTileAt(tile.X + 1, tile.Y + 1) != null && World.world.getTileAt(tile.X + 1, tile.Y + 1).piece != null) {
+                if (!OnlyTakes && tile.Y == 6 && World.world.isValidMove(tile.X, 3, color) == State.VALID) {
+                    // North +1 tile
+                    tiles.Add(World.world.getTileAt(tile.X, 3));
+                }
+
+                switch (World.world.isValidMove(tile.X + 1, tile.Y + 1, color)) {
                     // North-east tile
-                    tiles.Add(World.world.getTileAt(tile.X + 1, tile.Y + 1));
+                    case State.VALID:
+                        tiles.Add(World.world.getTileAt(tile.X + 1, tile.Y + 1));
+                        break;
+                    case State.INVALID:
+                        break;
+                    case State.TAKES:
+                        tiles.Add(World.world.getTileAt(tile.X + 1, tile.Y + 1));
+                        break;
+                    default:
+                        Debug.LogError("Unknown State");
+                        break;
                 }
 
-                if (World.world.getTileAt(tile.X - 1, tile.Y + 1) != null && World.world.getTileAt(tile.X - 1, tile.Y + 1).piece != null) {
+                switch (World.world.isValidMove(tile.X - 1, tile.Y, color)) {
                     // North-west tile
-                    tiles.Add(World.world.getTileAt(tile.X - 1, tile.Y + 1));
+                    case State.VALID:
+                        tiles.Add(World.world.getTileAt(tile.X - 1, tile.Y));
+                        break;
+                    case State.INVALID:
+                        break;
+                    case State.TAKES:
+                        tiles.Add(World.world.getTileAt(tile.X - 1, tile.Y));
+                        break;
+                    default:
+                        Debug.LogError("Unknown State");
+                        break;
                 }
+
                 break;
 
             default:
                 Debug.LogError("Unknown color");
                 return null;
         }
-
-        
-
 
         /// Anpacang, all the tiles are white only.
         return tiles.ToArray();

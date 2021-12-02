@@ -11,12 +11,23 @@ public class King : Piece
         this.color = color;
     }
 
-    public override Tile[] getMovableTiles() {
+    public override Tile[] getMovableTiles(bool OnlyTakes = false) {
         List<Tile> tiles = new List<Tile>(8);
 
         foreach (Tile tile in tile.getNeighbours(true)) {
-            if(tile != null && !canBeCheckedAtTile(tile) && tile.piece == null || tile.piece.color != color) {
-                tiles.Add(tile);
+            if (OnlyTakes || !canBeCheckedAtTile(tile)) {
+                switch (World.world.isValidMove(tile, color)) {
+                    case State.VALID:
+                        tiles.Add(tile);
+                        break;
+                    case State.INVALID:
+                        break;
+                    case State.TAKES:
+                        tiles.Add(tile);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -25,7 +36,7 @@ public class King : Piece
 
     bool canBeCheckedAtTile(Tile tile) {
         foreach (Piece piece in PieceController.pieceController.pieces) {
-            if (piece.color != color && piece.getMovableTiles().Contains(tile)) {
+            if (piece.color != color && piece.getMovableTiles(true).Contains(tile)) {
                 return true;
             }
         }

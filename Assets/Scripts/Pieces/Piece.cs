@@ -16,7 +16,7 @@ public class Piece
         this.tile = tile;
     }
 
-    public virtual Tile[] getMovableTiles() {
+    public virtual Tile[] getMovableTiles(bool OnlyTakes = false) {
         return null;
     }
 }

@@ -24,18 +24,20 @@ public class MouseController : MonoBehaviour
 
     private Piece _pieceToMove;
 
+    Color playerToMove = Color.WHITE;
+
     Piece pieceToMove {
         get {
             return _pieceToMove;
         }
         set {
-            if (value == _pieceToMove) {
+            if (value == null || value == _pieceToMove) {
+                clearPreviews();
+                _pieceToMove = null;
                 return;
             }
 
-            if (value == null) {
-                clearPreviews();
-                _pieceToMove = null;
+            if (value == _pieceToMove) {
                 return;
             }
 
@@ -65,6 +67,7 @@ public class MouseController : MonoBehaviour
         mouseController = this;
 
         hoveredPreviewGameObject = moveOverlay;
+        hoveredPreviewGameObject.name = "HoveredPreviewGameObject";
     }
 
     // Update is called once per frame
@@ -74,16 +77,30 @@ public class MouseController : MonoBehaviour
 
         UpdateCameraMovement();
 
-        if (Input.GetMouseButtonDown(0) && currentHoveredTile != null) {
-            if (currentHoveredTile.piece != null) {
-                pieceToMove = currentHoveredTile.piece;
-            }
-        }
-
-        if (Input.GetMouseButtonDown(0) && pieceToMove != null && currentHoveredTile != null && currentHoveredTile != pieceToMove.tile) {
+        if (Input.GetMouseButtonDown(0) && (pieceToMove == null || pieceToMove.color == playerToMove) && currentHoveredTile != null && currentHoveredTile != pieceToMove.tile) {
             if (pieceToMove.getMovableTiles().Contains(currentHoveredTile)) {
                 PieceController.pieceController.movePiece(pieceToMove, currentHoveredTile);
                 pieceToMove = null;
+
+                switch (playerToMove) {
+                    case Color.BLACK:
+                        playerToMove = Color.WHITE;
+                        break;
+
+                    case Color.WHITE:
+                        playerToMove = Color.BLACK;
+                        break;
+
+                    default:
+                        Debug.LogError("Unknown color");
+                        break;
+                }
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0) && (pieceToMove == null || pieceToMove.color == playerToMove) && currentHoveredTile != null) {
+            if (currentHoveredTile.piece != null) {
+                pieceToMove = currentHoveredTile.piece;
             }
         }
 
@@ -115,55 +132,7 @@ public class MouseController : MonoBehaviour
         Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel");
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 25f);
     }
-
-    public void dragInfrastructure() {
-
-        // If we're over a UI element, then bail out from this.
-        if (EventSystem.current.IsPointerOverGameObject()) {
-            return;
-        }
-
-        // Clean up old drag previews
-        while (movePreviewGameObjects.Count > 0) {
-            SimplePool.Despawn(movePreviewGameObjects[0]);
-            movePreviewGameObjects.RemoveAt(0);
-        }
-
-        // If the player presses escape. Quit the drag function.
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-        }
-
-        // quit Drag
-        if (Input.GetMouseButton(1)) {
-            dragStartPosition = currFramePosition;
-            canceled = true;
-            return;
-        }
-
-        // Start Drag
-        if (Input.GetMouseButtonDown(0)) {
-            dragStartPosition = currFramePosition;
-            canceled = false;
-        }
-
-        int start_x = Mathf.FloorToInt(dragStartPosition.x + 0.5f);
-        int start_y = Mathf.FloorToInt(dragStartPosition.y + 0.5f);
-        int end_x = Mathf.FloorToInt(currFramePosition.x + 0.5f);
-        int end_y = Mathf.FloorToInt(currFramePosition.y + 0.5f);
-
-        // We may be dragging in the "wrong" direction, so flip things if needed.
-        if (end_x < start_x) {
-            int temp = end_x;
-            end_x = start_x;
-            start_x = temp;
-        }
-        if (end_y < start_y) {
-            int temp = end_y;
-            end_y = start_y;
-            start_y = temp;
-        }
-    }
-
+    
     void clearPreviews() {
         // Clean up old drag previews
         while (movePreviewGameObjects.Count > 0) {

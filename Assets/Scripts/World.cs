@@ -5,7 +5,10 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using UnityEngine;
 
-public class World : IXmlSerializable {
+public enum State { VALID, INVALID, TAKES }
+
+public class World : IXmlSerializable
+{
     public World(int Width, int Height) {
         setupWorld(Width, Height);
     }
@@ -58,6 +61,39 @@ public class World : IXmlSerializable {
         }
 
         return tiles[x, y];
+    }
+
+    public State isValidMove(int x, int y, Color color) {
+        Tile tile = getTileAt(x, y);
+        if (tile == null) {
+            return State.INVALID;
+        }
+
+        if (tile.piece == null) {
+            return State.VALID;
+        }
+
+        if (tile.piece.color != color) {
+            return State.TAKES;
+        }
+
+        return State.INVALID;
+    }
+
+    public State isValidMove(Tile tile, Color color) {
+        if (tile == null) {
+            return State.INVALID;
+        }
+
+        if (tile.piece == null) {
+            return State.VALID;
+        }
+
+        if (tile.piece.color != color) {
+            return State.TAKES;
+        }
+
+        return State.INVALID;
     }
 
     #region Saving and loading

@@ -37,7 +37,7 @@ public class TileSpriteController : MonoBehaviour {
                     break;
 
                 default:
-                    Debug.LogError("Unknown tileType");
+                    Debug.LogError("Unknown color");
                     break;
             }
 
