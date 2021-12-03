@@ -24,10 +24,10 @@ public class WorldController : MonoBehaviour {
     }
 
     private void createEmptyWorld() {
-        world = new World(8, 8);
+        world = new World();
 
         // Center the camera.
-        Camera.main.transform.position = new Vector3(world.Width / 2, world.Height / 2, Camera.main.transform.position.z);
+        Camera.main.transform.position = new Vector3(4, 4, Camera.main.transform.position.z);
     }
 
     #region Saving and loading
@@ -67,7 +67,7 @@ public class WorldController : MonoBehaviour {
 
 
         // Center the camera.
-        Camera.main.transform.position = new Vector3(world.Width / 2, world.Height / 2, Camera.main.transform.position.z);
+        Camera.main.transform.position = new Vector3(4, 4, Camera.main.transform.position.z);
     }
 
     #endregion Saving and loading

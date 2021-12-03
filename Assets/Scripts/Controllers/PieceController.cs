@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+public enum WinState { RUNNING, WHITEWON, BLACKWON, REMIS, PATT }
 public class PieceController : MonoBehaviour
 {
 
     public static PieceController pieceController;
     public List<Piece> pieces;
+
+    public WinState winState = WinState.RUNNING;
 
     private void OnEnable() {
         pieceController = this;
@@ -82,5 +85,11 @@ public class PieceController : MonoBehaviour
 
         PieceSpriteController.pieceSpriteController.movePiece(piece, tile);
         piece.move(tile);
+    }
+
+    void checkWinState() {
+        if(pieces.Count() == 2 && pieces[0].pieceType == PieceType.KING && pieces[1].pieceType == PieceType.KING) {
+            winState = WinState.REMIS;
+        }
     }
 }
