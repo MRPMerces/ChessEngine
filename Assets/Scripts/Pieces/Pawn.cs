@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Pawn : Piece
 {
-    public Pawn(Tile tile, PieceType pieceType, Color color) {
+    public Pawn(Tile tile, Color color) {
         this.tile = tile;
-        this.pieceType = pieceType;
         this.color = color;
+
+        pieceType = PieceType.PAWN;
     }
     public override Tile[] getMovableTiles(bool OnlyTakes = false) {
         List<Tile> tiles = new List<Tile>();

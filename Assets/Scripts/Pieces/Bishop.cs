@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Bishop : Piece
 {
-    public Bishop(Tile tile, PieceType pieceType, Color color) {
+    public Bishop(Tile tile, Color color) {
         this.tile = tile;
-        this.pieceType = pieceType;
         this.color = color;
+
+        pieceType = PieceType.BISHOP;
     }
 
     public override Tile[] getMovableTiles(bool OnlyTakes = false) {

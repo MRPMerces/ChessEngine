@@ -14,8 +14,6 @@ public class MouseController : MonoBehaviour
 
     private Piece _pieceToMove;
 
-    Color playerToMove = Color.WHITE;
-
     Piece pieceToMove {
         get {
             return _pieceToMove;
@@ -64,7 +62,6 @@ public class MouseController : MonoBehaviour
 
         hoveredPreviewGameObject = SimplePool.Spawn(moveOverlay, new Vector3(0, 0, 0), Quaternion.identity);
         hoveredPreviewGameObject.name = "HoveredTilePreviewGameObject";
-        hoveredPreviewGameObject.transform.position = new Vector3(0, 0, 0);
         hoveredPreviewGameObject.transform.SetParent(transform, true);
         hoveredPreviewGameObject.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
         hoveredPreviewGameObject.SetActive(false);
@@ -73,27 +70,13 @@ public class MouseController : MonoBehaviour
     // Update is called once per frame
     void Update() {
         if (Input.GetMouseButtonDown(0) && currentHoveredTile != null) {
-            if (pieceToMove != null && (currentHoveredPiece == null || currentHoveredPiece.color != playerToMove) && pieceToMove.getMovableTiles().Contains(currentHoveredTile)) {
+            if (pieceToMove != null && (currentHoveredPiece == null || currentHoveredPiece.color != PieceController.pieceController.playerToMove) && pieceToMove.getMovableTiles().Contains(currentHoveredTile)) {
 
                 PieceController.pieceController.movePiece(pieceToMove, currentHoveredTile);
                 pieceToMove = null;
-
-                switch (playerToMove) {
-                    case Color.BLACK:
-                        playerToMove = Color.WHITE;
-                        break;
-
-                    case Color.WHITE:
-                        playerToMove = Color.BLACK;
-                        break;
-
-                    default:
-                        Debug.LogError("Unknown color");
-                        break;
-                }
             }
 
-            if (currentHoveredPiece != null && currentHoveredTile.piece.color == playerToMove) {
+            if (currentHoveredPiece != null && currentHoveredTile.piece.color == PieceController.pieceController.playerToMove) {
                 pieceToMove = currentHoveredTile.piece;
             }
 

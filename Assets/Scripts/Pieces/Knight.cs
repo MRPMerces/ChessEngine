@@ -5,10 +5,11 @@ using UnityEngine;
 public class Knight : Piece
 {
 
-    public Knight(Tile tile, PieceType pieceType, Color color) {
+    public Knight(Tile tile, Color color) {
         this.tile = tile;
-        this.pieceType = pieceType;
         this.color = color;
+
+        pieceType = PieceType.KNIGHT;
     }
 
     public override Tile[] getMovableTiles(bool OnlyTakes = false) {

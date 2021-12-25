@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Queen : Piece
 {
-    public Queen(Tile tile, PieceType pieceType, Color color) {
+    public Queen(Tile tile, Color color) {
         this.tile = tile;
-        this.pieceType = pieceType;
         this.color = color;
+
+        pieceType = PieceType.QUEEN;
     }
 
     public override Tile[] getMovableTiles(bool OnlyTakes = false) {

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Rook : Piece
 {
-    public Rook(Tile tile, PieceType pieceType, Color color) {
+    public Rook(Tile tile, Color color) {
         this.tile = tile;
-        this.pieceType = pieceType;
         this.color = color;
+
+        pieceType = PieceType.ROOK;
     }
 
     public override Tile[] getMovableTiles(bool OnlyTakes = false) {
